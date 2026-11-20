@@ -1,1 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>评价分类器</title>
+</head>
+<body>
+  <style>
+    .card{background:#f4f6f9;border-radius:12px;padding:14px;margin:12px 0}
+    .tag{display:inline-block;background:#ff7a45;color:#fff;border-radius:6px;padding:2px 8px;font-size:13px}
+    p{margin:8px 0 0;color:#444}
+  </style>
 
+  <h1>评价分类器</h1>
+  <div id="out">识别中…</div>
+
+  <script>
+
+
+    const reviews = [
+      "碱水包咸香，配冰美式刚好，已经回购三次了",
+      "肉桂卷甜度克制，肉桂味是真材实料不是香精",
+      "法棍外壳够脆，里面气孔也漂亮，就是放半天就有点韧",
+      "可颂22块太贵了，不会再来"
+    ];
+
+async function classify(text) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 8000);
+const res = await fetch("/api/classify", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text: text }),
+    signal: ctrl.signal
+  });
+  clearTimeout(timer);
+  const data = await res.json();
+  return data.label;
+}
+
+async function run() {
+  const out = document.getElementById("out");
+  out.innerHTML = "识别中…";
+  try {
+    const words = await Promise.all(reviews.map(function (t) { return classify(t); }));
+    out.innerHTML = words.map(function (w, i) {
+      return `<div class="card">
+        <span class="tag">${w}</span>
+        <p>${reviews[i]}</p>
+      </div>`;
+    }).join("");
+  } catch (e) {
+    out.innerHTML = `<div class="card">
+      <span class="tag">失败</span>
+      <p>${e.message}</p>
+      <button onclick="run()">再试一次</button>
+    </div>`;
+  }
+}
+
+run();
+  </script>
+</body>
+</html>
