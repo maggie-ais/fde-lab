@@ -6,3 +6,8 @@
   from = "/api/classify"
   to = "/.netlify/functions/classify"
   status = 200
+
+[[redirects]]
+  from = "/api/search"
+  to = "/.netlify/functions/search"
+  status = 200

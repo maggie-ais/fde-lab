@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>门店评价分析助手</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Microsoft YaHei", sans-serif;
+    background: #FAF8F4;
+    color: #26303A;
+    padding: 40px 20px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 26px; margin: 0 0 8px; }
+  .sub { color: #7A8694; font-size: 14px; margin-bottom: 26px; }
+  .box {
+    background: #fff;
+    border: 1px solid #E6E1D8;
+    border-radius: 14px;
+    padding: 22px;
+  }
+  textarea {
+    width: 100%;
+    min-height: 76px;
+    padding: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    border: 1px solid #DAD4C8;
+    border-radius: 10px;
+    resize: vertical;
+  }
+  textarea:focus { outline: 2px solid #C9A227; border-color: transparent; }
+  button {
+    margin-top: 14px;
+    width: 100%;
+    padding: 13px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background: #26303A;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  button:disabled { background: #9AA5B1; cursor: not-allowed; }
+  .hint { color: #9AA5B1; font-size: 13px; margin-top: 10px; line-height: 1.7; }
+  .result { margin-top: 26px; display: none; }
+  .result.show { display: block; }
+  .label {
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #9A8C6A;
+    margin: 22px 0 8px;
+    font-weight: 600;
+  }
+  .answer {
+    background: #FFFDF6;
+    border-left: 4px solid #C9A227;
+    padding: 14px 16px;
+    border-radius: 8px;
+    line-height: 1.75;
+    white-space: pre-wrap;
+  }
+  .evidence { list-style: none; padding: 0; margin: 0; }
+  .evidence li {
+    background: #F5F3EE;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .err { color: #B42318; font-size: 14px; margin-top: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>门店评价分析助手</h1>
+  <div class="sub">36 条真实评价 · 每条结论都带原文依据</div>
+
+  <div class="box">
+    <textarea id="q" placeholder="例如：我家甜度有问题吗？是哪几款？"></textarea>
+    <button id="go">问一句</button>
+    <div class="hint">
+      试试：哪款太咸了？ / 包装好评多吗？ / 哪款适合减脂吃？
+    </div>
+  </div>
+
+  <div class="result" id="result">
+    <div class="label">回答</div>
+    <div class="answer" id="answer"></div>
+    <div class="label">依据（系统挑出的原文）</div>
+    <ul class="evidence" id="evidence"></ul>
+    <div class="err" id="err"></div>
+  </div>
+</div>
+
+<script>
+const qEl = document.getElementById("q");
+const goEl = document.getElementById("go");
+const resultEl = document.getElementById("result");
+const answerEl = document.getElementById("answer");
+const evidenceEl = document.getElementById("evidence");
+const errEl = document.getElementById("err");
+
+async function ask() {
+  const question = qEl.value.trim();
+  if (!question) return;
+
+  goEl.disabled = true;
+  goEl.textContent = "查找中…";
+  errEl.textContent = "";
+  resultEl.classList.add("show");
+  answerEl.textContent = "";
+  evidenceEl.innerHTML = "";
+
+  try {
+    const resp = await fetch("/api/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question })
+    });
+    if (!resp.ok) throw new Error("服务器返回 " + resp.status);
+    const data = await resp.json();
+
+    answerEl.textContent = data.answer || "（没有回答）";
+    (data.evidence || []).forEach((t) => {
+      const li = document.createElement("li");
+      li.textContent = t;
+      evidenceEl.appendChild(li);
+    });
+  } catch (e) {
+    errEl.textContent = "出错了：" + e.message;
+  } finally {
+    goEl.disabled = false;
+    goEl.textContent = "问一句";
+  }
+}
+
+goEl.addEventListener("click", ask);
+qEl.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) ask();
+});
+</script>
+</body>
+</html>
