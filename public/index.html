@@ -1,29 +1,107 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>评价分类器 · 作品 1</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maggie · FDE 作品集</title>
 <style>
-  body{margin:0;font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif;background:#f7f8fa;color:#1f2329;display:flex;min-height:100vh;align-items:center;justify-content:center}
-  .wrap{max-width:560px;padding:40px 28px}
-  h1{font-size:30px;margin:0 0 12px}
-  .sub{color:#5b6470;line-height:1.75;margin:0 0 28px}
-  .btn{display:inline-block;background:#ff7a45;color:#fff;text-decoration:none;padding:13px 26px;border-radius:10px;font-size:16px}
-  .meta{margin-top:36px;font-size:13px;color:#8a929c;line-height:1.9}
-  .meta b{color:#5b6470}
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Microsoft YaHei", sans-serif;
+    background: #FAF8F4;
+    color: #26303A;
+    padding: 56px 20px 40px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 32px; margin: 0 0 10px; letter-spacing: 0.5px; }
+  .sub { color: #6B7684; font-size: 15px; line-height: 1.8; margin: 0 0 8px; }
+  .tags { margin: 18px 0 40px; }
+  .tags span {
+    display: inline-block;
+    background: #F0EBE0;
+    color: #7A6A45;
+    font-size: 13px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin: 0 8px 8px 0;
+  }
+  .cards { display: grid; gap: 18px; }
+  .card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    border: 1px solid #E6E1D8;
+    border-radius: 16px;
+    padding: 24px 26px;
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(38, 48, 58, 0.08);
+    border-color: #C9A227;
+  }
+  .tag {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #B08D1A;
+    margin-bottom: 10px;
+  }
+  .card h2 { font-size: 20px; margin: 0 0 10px; }
+  .card p { color: #5A6673; font-size: 14px; line-height: 1.75; margin: 0 0 16px; }
+  .go { font-size: 14px; font-weight: 600; color: #26303A; }
+  .foot {
+    margin-top: 44px;
+    padding-top: 22px;
+    border-top: 1px solid #E6E1D8;
+    font-size: 13px;
+    color: #8A95A1;
+    line-height: 1.9;
+  }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>评价分类器</h1>
-    <p class="sub">把一段顾客评价丢进大模型，自动判断它是好评、差评，还是关于口味、服务、物流的问题。四条真实评价已经在跑。</p>
-    <a class="btn" href="/classify.html">打开分类器 →</a>
-    <div class="meta">
-      <b>技术栈</b>：HTML / JavaScript · Node.js + Express · 大模型 API<br>
-      <b>做了什么</b>：前端不再持有密钥，请求全部经过自己的后端中转；网络失败、超时不会白屏<br>
-      <b>作者</b>：maggie-ais
-    </div>
+<div class="wrap">
+  <h1>Maggie</h1>
+  <p class="sub">
+    8 年电商 / 零售运营（淘宝 2013–18、抖音 2018–22、自营烘焙店 2022–26）<br>
+    正在转型 AI FDE（Forward Deployed Engineer）——把模型能力做成客户能用的东西
+  </p>
+  <div class="tags">
+    <span>Node.js</span>
+    <span>Netlify Functions</span>
+    <span>DeepSeek API</span>
+    <span>BAAI/bge-m3 向量检索</span>
+    <span>两路召回 + rerank</span>
   </div>
+
+  <div class="cards">
+    <a class="card" href="/search.html">
+      <div class="tag">作品 2</div>
+      <h2>门店评价分析助手</h2>
+      <p>
+        打一句话，从 36 条真实门店评价里找出答案。<br>
+        每条结论后面都带着原文依据，能连续追问，不用重启。
+      </p>
+      <span class="go">打开 →</span>
+    </a>
+
+    <a class="card" href="/classify.html">
+      <div class="tag">作品 1</div>
+      <h2>评价分类器</h2>
+      <p>
+        输入一条顾客评价，自动判断是好评、差评，还是口味 / 服务 / 物流问题。
+      </p>
+      <span class="go">打开 →</span>
+    </a>
+  </div>
+
+  <div class="foot">
+    两个作品都在 Netlify 上运行，可在线试用。<br>
+    代码与说明：<a href="https://github.com/maggie-ais/fde-lab" style="color:#26303A;">github.com/maggie-ais/fde-lab</a>
+  </div>
+</div>
 </body>
 </html>
